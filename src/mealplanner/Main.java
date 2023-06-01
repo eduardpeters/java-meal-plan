@@ -38,15 +38,35 @@ public class Main {
         }
         System.out.println("Input the meal's name:");
         String name = scanner.nextLine();
-        while (!isAlpha(name)) {
+        while (!isValidInput(name)) {
             System.out.println("Wrong format. Use letters only!");
             name = scanner.nextLine();
         }
         System.out.println("Input the ingredients:");
-        String allIngredients = scanner.nextLine();
-        String[] ingredients = allIngredients.split(",");
+        String allIngredients;
+        String[] ingredients = null;
+        int count = 0;
+        while (count == 0) {
+            allIngredients = scanner.nextLine();
+            ingredients = allIngredients.split(",");
+            for (String ingredient : ingredients) {
+                if (ingredient.isEmpty() || !isValidInput(ingredient.trim())) {
+                    System.out.println("Wrong format. Use letters only!");
+                    count = 0;
+                    break;
+                }
+                count++;
+            }
+            if (count != ingredients.length) {
+                count = 0;
+            }
+        }
+        String[] trimmedIngredients = new String[count];
+        for (int i = 0; i < trimmedIngredients.length; i++) {
+            trimmedIngredients[i] = ingredients[i].trim();
+        }
 
-        meals.add(new Meal(category, name, ingredients));
+        meals.add(new Meal(category, name, trimmedIngredients));
 
         System.out.println("The meal has been added!");
     }
@@ -59,9 +79,19 @@ public class Main {
                 System.out.println();
                 meal.printMeal();
             }
+            System.out.println();
         }
     }
 
+    public static boolean isValidInput(String str) {
+        String[] words = str.split(" ");
+        for (String word : words) {
+            if (!isAlpha(word)) {
+                return false;
+            }
+        }
+        return true;
+    }
     public static boolean isAlpha(String str) {
         return str.matches("[a-zA-Z]+");
     }
