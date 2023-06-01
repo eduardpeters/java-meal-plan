@@ -2,6 +2,7 @@ package mealplanner;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,12 +24,18 @@ public class Main {
                 }
             }
         }
-
+        System.out.println("Bye!");
     }
 
     public static void addMeal(Scanner scanner, ArrayList<Meal> meals) {
+        Set<String> validCategories = Set.of("breakfast", "lunch", "dinner");
+
         System.out.println("Which meal do you want to add (breakfast, lunch, dinner)?");
         String category = scanner.nextLine();
+        while (!validCategories.contains(category)) {
+            System.out.println("Wrong meal category! Choose from: breakfast, lunch, dinner.");
+            category = scanner.nextLine();
+        }
         System.out.println("Input the meal's name:");
         String name = scanner.nextLine();
         System.out.println("Input the ingredients:");
