@@ -23,14 +23,12 @@ public class Main {
         String allIngredients = scanner.nextLine();
         String[] ingredients = allIngredients.split(",");
 
-        System.out.println("");
+        Meal newMeal = new Meal(category, name, ingredients);
 
-        System.out.println("Category: " + category);
-        System.out.println("Name: " + name);
-        System.out.println("Ingredients:");
-        for (int i = 0; i < ingredients.length; i++) {
-            System.out.println(ingredients[i]);
-        }
+        System.out.println();
+
+        newMeal.printMeal();
+
         System.out.println("The meal has been added!");
     }
 }
