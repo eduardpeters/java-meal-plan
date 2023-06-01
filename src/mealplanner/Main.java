@@ -38,6 +38,10 @@ public class Main {
         }
         System.out.println("Input the meal's name:");
         String name = scanner.nextLine();
+        while (!isAlpha(name)) {
+            System.out.println("Wrong format. Use letters only!");
+            name = scanner.nextLine();
+        }
         System.out.println("Input the ingredients:");
         String allIngredients = scanner.nextLine();
         String[] ingredients = allIngredients.split(",");
@@ -56,5 +60,9 @@ public class Main {
                 meal.printMeal();
             }
         }
+    }
+
+    public static boolean isAlpha(String str) {
+        return str.matches("[a-zA-Z]+");
     }
 }
