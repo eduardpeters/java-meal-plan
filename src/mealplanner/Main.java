@@ -20,20 +20,11 @@ public class Main {
 
         Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
         connection.setAutoCommit(true);
-
         Statement statement = connection.createStatement();
-        statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS meals (
-                    meal_id integer,
-                    category varchar(50),
-                    meal varchar(255)
-                );""");
-        statement.executeUpdate("""
-                CREATE TABLE IF NOT EXISTS ingredients (
-                    ingredient_id integer,
-                    ingredient varchar(255),
-                    meal_id integer
-                );""");
+
+        DBManager dbManager = new DBManager(connection, statement);
+
+        dbManager.createTables();
 
         Scanner scanner = new Scanner(System.in);
         ArrayList<Meal> meals = new ArrayList<>();
