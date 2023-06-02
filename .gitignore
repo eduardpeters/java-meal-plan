@@ -32,3 +32,6 @@ bin/
 .gradle
 **/build/
 !src/**/build/
+
+### config ###
+.env
