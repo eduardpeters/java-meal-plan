@@ -1,11 +1,40 @@
 package mealplanner;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
+
+        Dotenv dotenv = Dotenv.load();
+        final String DB_URL = dotenv.get("DB_URL");
+        final String DB_USER = dotenv.get("DB_USER");
+        final String DB_PASS = dotenv.get("DB_PASS");
+
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        connection.setAutoCommit(true);
+
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS meals (
+                    meal_id integer,
+                    category varchar(50),
+                    meal varchar(255)
+                );""");
+        statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS ingredients (
+                    ingredient_id integer,
+                    ingredient varchar(255),
+                    meal_id integer
+                );""");
+
         Scanner scanner = new Scanner(System.in);
         ArrayList<Meal> meals = new ArrayList<>();
 
@@ -24,6 +53,8 @@ public class Main {
                 }
             }
         }
+        statement.close();
+        connection.close();
         System.out.println("Bye!");
     }
 
