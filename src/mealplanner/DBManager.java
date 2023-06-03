@@ -28,12 +28,23 @@ public class DBManager {
     }
 
     public void loadMeals(ArrayList<Meal> meals) throws SQLException {
-        ResultSet rs = statement.executeQuery("SELECT * FROM meals");
-        while (rs.next()) {
-            // Placeholder for loading
-            System.out.println("id = " + rs.getInt("meal_id"));
+        ResultSet rsMeal = statement.executeQuery("SELECT * FROM meals");
+        PreparedStatement st = connection.prepareStatement("""
+                SELECT * FROM ingredients WHERE meal_id = ?;""");
+        while (rsMeal.next()) {
+            st.setInt(1, rsMeal.getInt("meal_id"));
+            ResultSet rsIngredients = st.executeQuery();
+            ArrayList<String> ingredients = new ArrayList<>();
+            while (rsIngredients.next()) {
+                ingredients.add(rsIngredients.getString("ingredient"));
+            }
+            rsIngredients.close();
+            String category = rsMeal.getString("category");
+            String mealName = rsMeal.getString("meal");
+            String[] ingredientsArray = new String[ingredients.size()];
+            meals.add(new Meal(category, mealName, ingredients.toArray(ingredientsArray)));
         }
-        rs.close();
+        rsMeal.close();
     }
 
     public void insertMeal(Meal meal) throws SQLException {
