@@ -11,6 +11,18 @@ public class Meal {
         this.ingredients = ingredients;
     }
 
+    public String getCategory() {
+        return this.category;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String[] getIngredients() {
+        return this.ingredients;
+    }
+
     public void printMeal() {
         System.out.println("Category: " + this.category);
         System.out.println("Name: " + this.name);
