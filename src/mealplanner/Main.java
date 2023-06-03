@@ -23,10 +23,11 @@ public class Main {
 
         DBManager dbManager = new DBManager(connection, statement);
 
-        dbManager.createTables();
-
         Scanner scanner = new Scanner(System.in);
         ArrayList<Meal> meals = new ArrayList<>();
+
+        dbManager.createTables();
+        dbManager.loadMeals(meals);
 
         UI ui = new UI(scanner, meals, dbManager);
         ui.start();

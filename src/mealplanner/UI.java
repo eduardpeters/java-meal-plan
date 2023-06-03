@@ -1,5 +1,6 @@
 package mealplanner;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Set;
@@ -73,7 +74,13 @@ public class UI {
             trimmedIngredients[i] = ingredients[i].trim();
         }
 
-        meals.add(new Meal(category, name, trimmedIngredients));
+        Meal newMeal = new Meal(category, name, trimmedIngredients);
+        try {
+            dbManager.insertMeal(newMeal);
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+        }
+        meals.add(newMeal);
 
         System.out.println("The meal has been added!");
     }
