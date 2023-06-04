@@ -23,8 +23,12 @@ public class Meal {
         return this.ingredients;
     }
 
-    public void printMeal() {
+    public void printFullMeal() {
         System.out.println("Category: " + this.category);
+        printMeal();
+    }
+
+    public void printMeal() {
         System.out.println("Name: " + this.name);
         System.out.println("Ingredients:");
         for (String ingredient : this.ingredients) {

@@ -96,8 +96,9 @@ public class UI {
             return;
         }
         if (meals.isEmpty()) {
-            System.out.println("No meals saved. Add a meal first.");
+            System.out.println("No meals found.");
         } else {
+            System.out.printf("Category: %s\n", category);
             for (Meal meal : meals) {
                 System.out.println();
                 meal.printMeal();
