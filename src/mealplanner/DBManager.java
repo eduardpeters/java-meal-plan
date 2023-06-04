@@ -33,7 +33,8 @@ public class DBManager {
         statement.close();
     }
 
-    public void loadMeals(ArrayList<Meal> meals) throws SQLException {
+    public ArrayList<Meal> getMeals() throws SQLException {
+        ArrayList<Meal> meals = new ArrayList<>();
         Statement statement = connection.createStatement();
         ResultSet rsMeal = statement.executeQuery("SELECT * FROM meals");
         PreparedStatement st = connection.prepareStatement("""
@@ -54,15 +55,16 @@ public class DBManager {
         rsMeal.close();
         st.close();
         statement.close();
+        return meals;
     }
 
     public void insertMeal(Meal meal) throws SQLException {
         Statement statement = connection.createStatement();
         // First determine last id in meals
         ResultSet rs = statement.executeQuery("""
-            SELECT * FROM meals
-            ORDER BY meal_id DESC
-            LIMIT 1;""");
+                SELECT * FROM meals
+                ORDER BY meal_id DESC
+                LIMIT 1;""");
         int lastMealID = 0;
         if (rs.next()) {
             lastMealID = rs.getInt("meal_id");
@@ -78,9 +80,9 @@ public class DBManager {
         st.close();
         // First determine last id in ingredients
         rs = statement.executeQuery("""
-            SELECT * FROM ingredients
-            ORDER BY ingredient_id DESC
-            LIMIT 1;""");
+                SELECT * FROM ingredients
+                ORDER BY ingredient_id DESC
+                LIMIT 1;""");
         int lastIngredientID = 0;
         if (rs.next()) {
             lastIngredientID = rs.getInt("ingredient_id");

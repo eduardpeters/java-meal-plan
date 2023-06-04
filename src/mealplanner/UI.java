@@ -7,12 +7,11 @@ import java.util.Set;
 
 public class UI {
     private Scanner scanner;
-    private ArrayList<Meal> meals;
+
     private DBManager dbManager;
 
-    public UI(Scanner scanner, ArrayList<Meal> meals, DBManager dbManager) {
+    public UI(Scanner scanner, DBManager dbManager) {
         this.scanner = scanner;
-        this.meals = meals;
         this.dbManager = dbManager;
     }
 
@@ -26,8 +25,8 @@ public class UI {
             }
 
             switch (command) {
-                case "add" -> addMeal(scanner, meals);
-                case "show" -> showMeals(meals);
+                case "add" -> addMeal(scanner);
+                case "show" -> showMeals();
                 default -> {
                 }
             }
@@ -35,7 +34,7 @@ public class UI {
         System.out.println("Bye!");
     }
 
-    private void addMeal(Scanner scanner, ArrayList<Meal> meals) {
+    private void addMeal(Scanner scanner) {
         Set<String> validCategories = Set.of("breakfast", "lunch", "dinner");
 
         System.out.println("Which meal do you want to add (breakfast, lunch, dinner)?");
@@ -80,12 +79,18 @@ public class UI {
         } catch (SQLException e) {
             System.out.println("DB Error: " + e.getMessage());
         }
-        meals.add(newMeal);
 
         System.out.println("The meal has been added!");
     }
 
-    private void showMeals(ArrayList<Meal> meals) {
+    private void showMeals() {
+        ArrayList<Meal> meals;
+        try {
+            meals = dbManager.getMeals();
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+            return;
+        }
         if (meals.isEmpty()) {
             System.out.println("No meals saved. Add a meal first.");
         } else {
