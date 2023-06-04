@@ -5,7 +5,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,11 +16,7 @@ public class Main {
         final String DB_USER = dotenv.get("DB_USER");
         final String DB_PASS = dotenv.get("DB_PASS");
 
-        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-        connection.setAutoCommit(true);
-        Statement statement = connection.createStatement();
-
-        DBManager dbManager = new DBManager(connection, statement);
+        DBManager dbManager = new DBManager(DB_URL, DB_USER, DB_PASS);
 
         Scanner scanner = new Scanner(System.in);
         ArrayList<Meal> meals = new ArrayList<>();
@@ -32,7 +27,6 @@ public class Main {
         UI ui = new UI(scanner, meals, dbManager);
         ui.start();
 
-        statement.close();
-        connection.close();
+        dbManager.closeConnection();
     }
 }

@@ -5,14 +5,19 @@ import java.util.ArrayList;
 
 public class DBManager {
     private Connection connection;
-    private Statement statement;
 
-    public DBManager(Connection connection, Statement statement) {
+    public DBManager(String DB_URL, String DB_USER, String DB_PASS) throws SQLException {
+        Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        connection.setAutoCommit(true);
         this.connection = connection;
-        this.statement = statement;
+    }
+
+    public void closeConnection() throws SQLException {
+        this.connection.close();
     }
 
     public void createTables() throws SQLException {
+        Statement statement = connection.createStatement();
         statement.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS meals (
                     meal_id integer,
@@ -25,9 +30,11 @@ public class DBManager {
                     ingredient varchar(255),
                     meal_id integer
                 );""");
+        statement.close();
     }
 
     public void loadMeals(ArrayList<Meal> meals) throws SQLException {
+        Statement statement = connection.createStatement();
         ResultSet rsMeal = statement.executeQuery("SELECT * FROM meals");
         PreparedStatement st = connection.prepareStatement("""
                 SELECT * FROM ingredients WHERE meal_id = ?;""");
@@ -45,9 +52,12 @@ public class DBManager {
             meals.add(new Meal(category, mealName, ingredients.toArray(ingredientsArray)));
         }
         rsMeal.close();
+        st.close();
+        statement.close();
     }
 
     public void insertMeal(Meal meal) throws SQLException {
+        Statement statement = connection.createStatement();
         // First determine last id in meals
         ResultSet rs = statement.executeQuery("""
             SELECT * FROM meals
@@ -86,5 +96,6 @@ public class DBManager {
             st.executeUpdate();
         }
         st.close();
+        statement.close();
     }
 }
