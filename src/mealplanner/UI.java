@@ -25,7 +25,7 @@ public class UI {
             }
 
             switch (command) {
-                case "add" -> addMeal(scanner);
+                case "add" -> addMeal();
                 case "show" -> showMeals();
                 default -> {
                 }
@@ -34,7 +34,7 @@ public class UI {
         System.out.println("Bye!");
     }
 
-    private void addMeal(Scanner scanner) {
+    private void addMeal() {
         System.out.println("Which meal do you want to add (breakfast, lunch, dinner)?");
         String category = scanner.nextLine();
         while (!validCategories.contains(category)) {
