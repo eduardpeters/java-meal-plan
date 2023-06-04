@@ -90,7 +90,7 @@ public class UI {
         }
         ArrayList<Meal> meals;
         try {
-            meals = dbManager.getMeals();
+            meals = dbManager.getMeals(category);
         } catch (SQLException e) {
             System.out.println("DB Error: " + e.getMessage());
             return;

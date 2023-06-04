@@ -33,10 +33,11 @@ public class DBManager {
         statement.close();
     }
 
-    public ArrayList<Meal> getMeals() throws SQLException {
+    public ArrayList<Meal> getMeals(String category) throws SQLException {
         ArrayList<Meal> meals = new ArrayList<>();
-        Statement statement = connection.createStatement();
-        ResultSet rsMeal = statement.executeQuery("SELECT * FROM meals");
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM meals WHERE category = ?;");
+        statement.setString(1, category);
+        ResultSet rsMeal = statement.executeQuery();
         PreparedStatement st = connection.prepareStatement("""
                 SELECT * FROM ingredients WHERE meal_id = ?;""");
         while (rsMeal.next()) {
@@ -47,10 +48,10 @@ public class DBManager {
                 ingredients.add(rsIngredients.getString("ingredient"));
             }
             rsIngredients.close();
-            String category = rsMeal.getString("category");
+            String mealCategory = rsMeal.getString("category");
             String mealName = rsMeal.getString("meal");
             String[] ingredientsArray = new String[ingredients.size()];
-            meals.add(new Meal(category, mealName, ingredients.toArray(ingredientsArray)));
+            meals.add(new Meal(mealCategory, mealName, ingredients.toArray(ingredientsArray)));
         }
         rsMeal.close();
         st.close();
