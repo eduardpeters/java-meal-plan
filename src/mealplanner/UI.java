@@ -7,8 +7,8 @@ import java.util.Set;
 
 public class UI {
     private Scanner scanner;
-
     private DBManager dbManager;
+    private Set<String> validCategories = Set.of("breakfast", "lunch", "dinner");
 
     public UI(Scanner scanner, DBManager dbManager) {
         this.scanner = scanner;
@@ -35,8 +35,6 @@ public class UI {
     }
 
     private void addMeal(Scanner scanner) {
-        Set<String> validCategories = Set.of("breakfast", "lunch", "dinner");
-
         System.out.println("Which meal do you want to add (breakfast, lunch, dinner)?");
         String category = scanner.nextLine();
         while (!validCategories.contains(category)) {
@@ -84,6 +82,12 @@ public class UI {
     }
 
     private void showMeals() {
+        System.out.println("Which category do you want to print (breakfast, lunch, dinner)?");
+        String category = scanner.nextLine();
+        while (!validCategories.contains(category)) {
+            System.out.println("Wrong meal category! Choose from: breakfast, lunch, dinner.");
+            category = scanner.nextLine();
+        }
         ArrayList<Meal> meals;
         try {
             meals = dbManager.getMeals();
