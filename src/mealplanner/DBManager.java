@@ -121,4 +121,9 @@ public class DBManager {
         st.close();
         statement.close();
     }
+
+    public void clearPlan() throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("TRUNCATE TABLE plan");
+    }
 }

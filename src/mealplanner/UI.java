@@ -110,6 +110,12 @@ public class UI {
     }
 
     private void planMeals() {
+        try {
+            dbManager.clearPlan();
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+            return;
+        }
         for (String day : daysOfWeek) {
             System.out.println(day);
             pickMeal(day, "breakfast");
