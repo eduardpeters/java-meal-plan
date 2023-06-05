@@ -48,10 +48,11 @@ public class DBManager {
                 ingredients.add(rsIngredients.getString("ingredient"));
             }
             rsIngredients.close();
+            int mealID = rsMeal.getInt("meal_id");
             String mealCategory = rsMeal.getString("category");
             String mealName = rsMeal.getString("meal");
             String[] ingredientsArray = new String[ingredients.size()];
-            meals.add(new Meal(mealCategory, mealName, ingredients.toArray(ingredientsArray)));
+            meals.add(new Meal(mealID, mealCategory, mealName, ingredients.toArray(ingredientsArray)));
         }
         rsMeal.close();
         st.close();

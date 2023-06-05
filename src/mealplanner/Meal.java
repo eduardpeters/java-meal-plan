@@ -4,11 +4,17 @@ public class Meal {
     private String category;
     private String name;
     private String[] ingredients;
+    private int id;
 
     public Meal(String category, String name, String[] ingredients) {
         this.category = category;
         this.name = name;
         this.ingredients = ingredients;
+    }
+
+    public Meal(int id, String category, String name, String[] ingredients) {
+        this(category, name, ingredients);
+        this.id = id;
     }
 
     public String getCategory() {
@@ -22,6 +28,8 @@ public class Meal {
     public String[] getIngredients() {
         return this.ingredients;
     }
+
+    public int getID() { return this.id; }
 
     public void printFullMeal() {
         System.out.println("Category: " + this.category);
