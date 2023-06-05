@@ -9,6 +9,7 @@ public class UI {
     private Scanner scanner;
     private DBManager dbManager;
     private Set<String> validCategories = Set.of("breakfast", "lunch", "dinner");
+    private String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
     public UI(Scanner scanner, DBManager dbManager) {
         this.scanner = scanner;
@@ -17,7 +18,7 @@ public class UI {
 
     public void start() {
         while (true) {
-            System.out.println("What would you like to do (add, show, exit)?");
+            System.out.println("What would you like to do (add, show, plan, exit)?");
             String command = scanner.nextLine();
 
             if (command.equals("exit")) {
@@ -27,6 +28,7 @@ public class UI {
             switch (command) {
                 case "add" -> addMeal();
                 case "show" -> showMeals();
+                case "plan" -> planMeals();
                 default -> {
                 }
             }
@@ -105,6 +107,45 @@ public class UI {
             }
             System.out.println();
         }
+    }
+
+    private void planMeals() {
+        for (String day : daysOfWeek) {
+            System.out.println(day);
+            pickMeal(day, "breakfast");
+            pickMeal(day, "lunch");
+            pickMeal(day, "dinner");
+            System.out.printf("Yeah! We planned the meals for %s.\n\n", day);
+        }
+        System.out.println("Show mealplan!");
+    }
+
+    private void pickMeal(String day, String category) {
+        ArrayList<Meal> options = new ArrayList<>();
+        try {
+            options = dbManager.getMeals(category);
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+            return;
+        }
+        for (Meal option : options) {
+            System.out.println(option.getName());
+        }
+        System.out.printf("Choose the %s for %s from the list above\n", category, day);
+        String choice = scanner.nextLine();
+        while (!isInMeals(options, choice)) {
+            System.out.println("This meal doesn’t exist. Choose a meal from the list above.");
+            choice = scanner.nextLine();
+        }
+    }
+
+    private boolean isInMeals(ArrayList<Meal> meals, String name) {
+        for (Meal meal : meals) {
+            if (meal.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean isValidInput(String str) {
