@@ -143,6 +143,11 @@ public class UI {
             System.out.println("This meal doesn’t exist. Choose a meal from the list above.");
             choice = scanner.nextLine();
         }
+        try {
+            dbManager.insertPlannedMeal(day, category, choice);
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+        }
     }
 
     private boolean isValidInput(String str) {

@@ -126,4 +126,19 @@ public class DBManager {
         Statement statement = connection.createStatement();
         statement.executeUpdate("TRUNCATE TABLE plan");
     }
+
+    public void insertPlannedMeal(String day, String category, String meal) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("SELECT meal_id from meals WHERE meal = ? LIMIT 1;");
+        statement.setString(1, meal);
+        ResultSet rsMeals = statement.executeQuery();
+        while (rsMeals.next()) {
+            PreparedStatement st = connection.prepareStatement("""
+                    INSERT INTO plan (day, category, meal_id)
+                    VALUES (?, ?, ?)""");
+            st.setString(1, day);
+            st.setString(2, category);
+            st.setInt(3, rsMeals.getInt("meal_id"));
+            st.executeUpdate();
+        }
+    }
 }
