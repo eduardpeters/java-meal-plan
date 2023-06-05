@@ -121,31 +121,22 @@ public class UI {
     }
 
     private void pickMeal(String day, String category) {
-        ArrayList<Meal> options = new ArrayList<>();
+        ArrayList<String> options;
         try {
-            options = dbManager.getMeals(category);
+            options = dbManager.getOptions(category);
         } catch (SQLException e) {
             System.out.println("DB Error: " + e.getMessage());
             return;
         }
-        for (Meal option : options) {
-            System.out.println(option.getName());
+        for (String option : options) {
+            System.out.println(option);
         }
         System.out.printf("Choose the %s for %s from the list above\n", category, day);
         String choice = scanner.nextLine();
-        while (!isInMeals(options, choice)) {
+        while (!options.contains(choice)) {
             System.out.println("This meal doesn’t exist. Choose a meal from the list above.");
             choice = scanner.nextLine();
         }
-    }
-
-    private boolean isInMeals(ArrayList<Meal> meals, String name) {
-        for (Meal meal : meals) {
-            if (meal.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private boolean isValidInput(String str) {

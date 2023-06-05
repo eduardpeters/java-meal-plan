@@ -66,6 +66,19 @@ public class DBManager {
         return meals;
     }
 
+    public ArrayList<String> getOptions(String category) throws SQLException {
+        ArrayList<String> options = new ArrayList<>();
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM meals WHERE category = ? ORDER BY meal;");
+        statement.setString(1, category);
+        ResultSet rsOptions = statement.executeQuery();
+        while (rsOptions.next()) {
+            options.add(rsOptions.getString("meal"));
+        }
+        rsOptions.close();
+        statement.close();
+        return options;
+    }
+
     public void insertMeal(Meal meal) throws SQLException {
         Statement statement = connection.createStatement();
         // First determine last id in meals
