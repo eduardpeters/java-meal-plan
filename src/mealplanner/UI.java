@@ -123,7 +123,7 @@ public class UI {
             pickMeal(day, "dinner");
             System.out.printf("Yeah! We planned the meals for %s.\n\n", day);
         }
-        System.out.println("Show mealplan!");
+        showPlan();
     }
 
     private void pickMeal(String day, String category) {
@@ -137,7 +137,7 @@ public class UI {
         for (String option : options) {
             System.out.println(option);
         }
-        System.out.printf("Choose the %s for %s from the list above\n", category, day);
+        System.out.printf("Choose the %s for %s from the list above:\n", category, day);
         String choice = scanner.nextLine();
         while (!options.contains(choice)) {
             System.out.println("This meal doesn’t exist. Choose a meal from the list above.");
@@ -147,6 +147,33 @@ public class UI {
             dbManager.insertPlannedMeal(day, category, choice);
         } catch (SQLException e) {
             System.out.println("DB Error: " + e.getMessage());
+        }
+    }
+
+    public void showPlan() {
+        String meal = "";
+        for (String day : daysOfWeek) {
+            System.out.println(day);
+            try {
+                meal = dbManager.getPlannedMeal(day, "breakfast");
+            } catch (SQLException e) {
+                System.out.println("DB Error: " + e.getMessage());
+            }
+            System.out.printf("%s: %s\n", "Breakfast", meal);
+            try {
+                meal = dbManager.getPlannedMeal(day, "lunch");
+            } catch (SQLException e) {
+                System.out.println("DB Error: " + e.getMessage());
+            }
+            System.out.printf("%s: %s\n", "Lunch", meal);
+            try {
+                meal = dbManager.getPlannedMeal(day, "dinner");
+            } catch (SQLException e) {
+                System.out.println("DB Error: " + e.getMessage());
+            }
+            System.out.printf("%s: %s\n", "Dinner", meal);
+
+            System.out.println();
         }
     }
 

@@ -79,6 +79,27 @@ public class DBManager {
         return options;
     }
 
+    public String getPlannedMeal(String day, String category) throws SQLException {
+        String name = "";
+        PreparedStatement statement = connection.prepareStatement("SELECT * FROM plan WHERE day = ? AND category = ?");
+        statement.setString(1, day);
+        statement.setString(2, category);
+        ResultSet rsPlan = statement.executeQuery();
+        while (rsPlan.next()) {
+            PreparedStatement st = connection.prepareStatement("SELECT meal FROM meals WHERE meal_id = ?;");
+            st.setInt(1, rsPlan.getInt("meal_id"));
+            ResultSet rsMeals = st.executeQuery();
+            while (rsMeals.next()) {
+                name = rsMeals.getString("meal");
+            }
+            rsMeals.close();
+            st.close();
+        }
+        rsPlan.close();
+        statement.close();
+        return name;
+    }
+
     public void insertMeal(Meal meal) throws SQLException {
         Statement statement = connection.createStatement();
         // First determine last id in meals
@@ -122,23 +143,26 @@ public class DBManager {
         statement.close();
     }
 
-    public void clearPlan() throws SQLException {
-        Statement statement = connection.createStatement();
-        statement.executeUpdate("TRUNCATE TABLE plan");
-    }
-
     public void insertPlannedMeal(String day, String category, String meal) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("SELECT meal_id from meals WHERE meal = ? LIMIT 1;");
         statement.setString(1, meal);
         ResultSet rsMeals = statement.executeQuery();
+        PreparedStatement st = connection.prepareStatement("""
+                INSERT INTO plan (day, category, meal_id)
+                VALUES (?, ?, ?)""");
         while (rsMeals.next()) {
-            PreparedStatement st = connection.prepareStatement("""
-                    INSERT INTO plan (day, category, meal_id)
-                    VALUES (?, ?, ?)""");
             st.setString(1, day);
             st.setString(2, category);
             st.setInt(3, rsMeals.getInt("meal_id"));
             st.executeUpdate();
         }
+        rsMeals.close();
+        st.close();
+        statement.close();
+    }
+
+    public void clearPlan() throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("TRUNCATE TABLE plan");
     }
 }

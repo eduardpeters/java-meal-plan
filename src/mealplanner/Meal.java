@@ -29,7 +29,9 @@ public class Meal {
         return this.ingredients;
     }
 
-    public int getID() { return this.id; }
+    public int getID() {
+        return this.id;
+    }
 
     public void printFullMeal() {
         System.out.println("Category: " + this.category);
