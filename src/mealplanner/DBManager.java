@@ -30,6 +30,12 @@ public class DBManager {
                     ingredient varchar(255),
                     meal_id integer
                 );""");
+        statement.executeUpdate("""
+                CREATE TABLE IF NOT EXISTS plan (
+                    day varchar(10),
+                    category varchar(50),
+                    meal_id integer
+                );""");
         statement.close();
     }
 
