@@ -191,7 +191,13 @@ public class UI {
             return;
         }
         System.out.println(mealIds);
-        System.out.println("Ask for file and save!");
+
+        String filename = "";
+        while (filename.isEmpty()) {
+            System.out.println("Input a filename:");
+            filename = scanner.nextLine();
+        }
+        System.out.println("Saved!");
     }
 
     private boolean isValidInput(String str) {
