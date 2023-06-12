@@ -161,8 +161,21 @@ public class DBManager {
         statement.close();
     }
 
+    public ArrayList<Integer> getPlannedMealIds() throws SQLException {
+        ArrayList<Integer> mealIds = new ArrayList<>();
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT meal_id FROM plan;");
+        while (rs.next()) {
+            mealIds.add(rs.getInt("meal_id"));
+        }
+        rs.close();
+        statement.close();
+        return mealIds;
+    }
+
     public void clearPlan() throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate("TRUNCATE TABLE plan");
+        statement.close();
     }
 }

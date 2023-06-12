@@ -18,7 +18,7 @@ public class UI {
 
     public void start() {
         while (true) {
-            System.out.println("What would you like to do (add, show, plan, exit)?");
+            System.out.println("What would you like to do (add, show, plan, save, exit)?");
             String command = scanner.nextLine();
 
             if (command.equals("exit")) {
@@ -29,6 +29,7 @@ public class UI {
                 case "add" -> addMeal();
                 case "show" -> showMeals();
                 case "plan" -> planMeals();
+                case "save" -> savePlan();
                 default -> {
                 }
             }
@@ -150,7 +151,7 @@ public class UI {
         }
     }
 
-    public void showPlan() {
+    private void showPlan() {
         String meal = "";
         for (String day : daysOfWeek) {
             System.out.println(day);
@@ -175,6 +176,22 @@ public class UI {
 
             System.out.println();
         }
+    }
+
+    private void savePlan() {
+        ArrayList<Integer> mealIds;
+        try {
+            mealIds = dbManager.getPlannedMealIds();
+        } catch (SQLException e) {
+            System.out.println("DB Error: " + e.getMessage());
+            return;
+        }
+        if (mealIds.isEmpty()) {
+            System.out.println("Unable to save. Plan your meals first.");
+            return;
+        }
+        System.out.println(mealIds);
+        System.out.println("Ask for file and save!");
     }
 
     private boolean isValidInput(String str) {
