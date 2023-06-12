@@ -1,5 +1,8 @@
 package mealplanner;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -211,7 +214,14 @@ public class UI {
                 weekIngredients.put(ingredient, ++count);
             }
         }
-        System.out.println(buildShoppingList(weekIngredients));
+
+        File file = new File(filename);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(buildShoppingList(weekIngredients));
+        } catch (IOException e) {
+            System.out.println("IO Error: " + e.getMessage());
+        }
+
         System.out.println("Saved!");
     }
 
