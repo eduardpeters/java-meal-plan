@@ -2,6 +2,7 @@ package mealplanner;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -190,14 +191,41 @@ public class UI {
             System.out.println("Unable to save. Plan your meals first.");
             return;
         }
-        System.out.println(mealIds);
 
         String filename = "";
         while (filename.isEmpty()) {
             System.out.println("Input a filename:");
             filename = scanner.nextLine();
         }
+        HashMap<String, Integer> weekIngredients = new HashMap<>();
+        for (int mealId : mealIds) {
+            ArrayList<String> ingredients;
+            try {
+                ingredients = dbManager.getMealIngredients(mealId);
+            } catch (SQLException e) {
+                System.out.println("DB Error: " + e.getMessage());
+                return;
+            }
+            for (String ingredient : ingredients) {
+                int count = weekIngredients.getOrDefault(ingredient, 0);
+                weekIngredients.put(ingredient, ++count);
+            }
+        }
+        System.out.println(buildShoppingList(weekIngredients));
         System.out.println("Saved!");
+    }
+
+    private String buildShoppingList(HashMap<String, Integer> ingredients) {
+        StringBuilder shoppingList = new StringBuilder();
+        for (String ingredient : ingredients.keySet()) {
+            shoppingList.append(ingredient);
+            int count = ingredients.get(ingredient);
+            if (count != 1) {
+                shoppingList.append(" x" + count);
+            }
+            shoppingList.append("\n");
+        }
+        return shoppingList.toString();
     }
 
     private boolean isValidInput(String str) {
