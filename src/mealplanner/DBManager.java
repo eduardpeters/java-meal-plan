@@ -47,14 +47,8 @@ public class DBManager {
         PreparedStatement st = connection.prepareStatement("""
                 SELECT * FROM ingredients WHERE meal_id = ?;""");
         while (rsMeal.next()) {
-            st.setInt(1, rsMeal.getInt("meal_id"));
-            ResultSet rsIngredients = st.executeQuery();
-            ArrayList<String> ingredients = new ArrayList<>();
-            while (rsIngredients.next()) {
-                ingredients.add(rsIngredients.getString("ingredient"));
-            }
-            rsIngredients.close();
             int mealID = rsMeal.getInt("meal_id");
+            ArrayList<String> ingredients = getMealIngredients(mealID);
             String mealCategory = rsMeal.getString("category");
             String mealName = rsMeal.getString("meal");
             String[] ingredientsArray = new String[ingredients.size()];
@@ -64,6 +58,20 @@ public class DBManager {
         st.close();
         statement.close();
         return meals;
+    }
+
+    public ArrayList<String> getMealIngredients(int meal_id) throws SQLException {
+        ArrayList<String> ingredients = new ArrayList<>();
+        PreparedStatement st = connection.prepareStatement("""
+                SELECT * FROM ingredients WHERE meal_id = ?;""");
+        st.setInt(1, meal_id);
+        ResultSet rs = st.executeQuery();
+        while (rs.next()) {
+            ingredients.add(rs.getString("ingredient"));
+        }
+        rs.close();
+        st.close();
+        return ingredients;
     }
 
     public ArrayList<String> getOptions(String category) throws SQLException {
